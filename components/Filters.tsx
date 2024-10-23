@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 interface FilterProps {
@@ -9,14 +9,40 @@ interface FilterProps {
   setSelectedType: (value: string | undefined) => void;
 }
 
+const typeColors: { [key: string]: string } = {
+  normal: '#A8A77A',
+  fire: '#EE8130',
+  water: '#6390F0',
+  grass: '#7AC74C',
+  electric: '#F7D02C',
+  ice: '#96D9D6',
+  fighting: '#C22E28',
+  poison: '#A33EA1',
+  ground: '#E2BF65',
+  flying: '#A98FF3',
+  psychic: '#F95587',
+  bug: '#A6B91A',
+  rock: '#B6A136',
+  ghost: '#735797',
+  dragon: '#6F35FC',
+  dark: '#705746',
+  steel: '#B7B7CE',
+  fairy: '#D685AD',
+  default: '#333', // Màu mặc định khi không chọn hệ
+};
+
 const Filters: React.FC<FilterProps> = ({
   selectedGen,
   setSelectedGen,
   selectedType,
   setSelectedType,
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const types = Object.keys(typeColors); // Lấy danh sách các loại Pokémon
+
   return (
     <View style={styles.filtersContainer}>
+      {/* Bộ lọc Generation */}
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Generation</Text>
         <Picker
@@ -38,39 +64,49 @@ const Filters: React.FC<FilterProps> = ({
         </Picker>
       </View>
 
+      {/* Bộ lọc Type */}
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Type</Text>
-        <Picker
-          selectedValue={selectedType}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedType(itemValue)}
-          dropdownIconColor="#FF3D00"
+        <TouchableOpacity
+          style={[styles.selectedType, { backgroundColor: selectedType ? typeColors[selectedType] : '#fff' }]}
+          onPress={() => setModalVisible(true)}
         >
-          <Picker.Item label="All Type" value="" />
-          <Picker.Item label="Normal" value="normal" />
-          <Picker.Item label="Fire" value="fire" />
-          <Picker.Item label="Water" value="water" />
-          <Picker.Item label="Grass" value="grass" />
-          <Picker.Item label="Electric" value="electric" />
-          <Picker.Item label="Ice" value="ice" />
-          <Picker.Item label="Fighting" value="fighting" />
-          <Picker.Item label="Poison" value="poison" />
-          <Picker.Item label="Ground" value="ground" />
-          <Picker.Item label="Flying" value="flying" />
-          <Picker.Item label="Psychic" value="psychic" />
-          <Picker.Item label="Bug" value="bug" />
-          <Picker.Item label="Rock" value="rock" />
-          <Picker.Item label="Ghost" value="ghost" />
-          <Picker.Item label="Dragon" value="dragon" />
-          <Picker.Item label="Dark" value="dark" />
-          <Picker.Item label="Steel" value="steel" />
-          <Picker.Item label="Fairy" value="fairy" />
-        </Picker>
+          <Text style={styles.selectedTypeText}>
+            {selectedType ? selectedType.charAt(0).toUpperCase() + selectedType.slice(1) : 'Select Type'}
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Modal cho loại Pokémon */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <FlatList
+            data={types}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.typeItem, { backgroundColor: typeColors[item] }]}
+                onPress={() => {
+                  setSelectedType(item === 'default' ? '' : item); // Nếu là 'default', set thành chuỗi rỗng
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={styles.typeText}>{item.charAt(0).toUpperCase() + item.slice(1)}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </Modal>
     </View>
   );
-}
+};
 
+// Các style không thay đổi
 const styles = StyleSheet.create({
   filtersContainer: {
     flexDirection: 'row',
@@ -78,15 +114,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 15,
     borderRadius: 12,
-    backgroundColor: '#ffffff', // Màu nền chính
-    elevation: 5, // Đổ bóng
-    shadowColor: '#000', // Màu bóng
+    backgroundColor: '#ffffff',
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.2, // Độ mờ của bóng
-    shadowRadius: 2, // Độ lan tỏa của bóng
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   pickerContainer: {
     flex: 1,
@@ -95,16 +131,42 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333', // Màu chữ cho nhãn
+    color: '#333',
     marginBottom: 8,
-    textAlign: 'center', // Căn giữa nhãn
+    textAlign: 'center',
+  },
+  selectedType: {
+    height: 50,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedTypeText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  typeItem: {
+    padding: 15,
+    margin: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  typeText: {
+    color: '#fff',
+    fontWeight: '600',
   },
   picker: {
     height: 50,
-    backgroundColor: '#f8f9fa',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc', // Đường viền cho picker
+    borderColor: '#ccc',
     paddingLeft: 10,
   },
 });
