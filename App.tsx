@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import PokemonCard from './components/PokemonCard';
 import Filters from './components/Filters';
 import useFetchPokemon from './hooks/useFetchPokemon';
 import { styles } from './styles/styles';
-import { PokemonDetails } from './styles/types';
 
 const App: React.FC = () => {
-  const [limit] = useState(151); // số lượng Pokémon tải lên mỗi lần
-  const [offset, setOffset] = useState(0);
-  const { pokemonList, loading } = useFetchPokemon(limit, offset);
+  const { pokemonList, loading } = useFetchPokemon(); // Lấy danh sách Pokémon
   const [searchText, setSearchText] = useState('');
   const [selectedVersion, setSelectedVersion] = useState<string | undefined>(undefined);
   const [selectedGen, setSelectedGen] = useState<string | undefined>(undefined);
@@ -23,13 +20,7 @@ const App: React.FC = () => {
     return matchesSearch && matchesVersion && matchesGen && matchesType;
   });
 
-  const handleLoadMore = () => {
-    if (!loading) {
-      setOffset(prev => prev + limit);
-    }
-  };
-
-  if (loading && offset === 0) {
+  if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#4CAF50" />
@@ -60,10 +51,7 @@ const App: React.FC = () => {
         data={filteredPokemon}
         keyExtractor={(item) => item.name}
         numColumns={3}
-        renderItem={({ item }) => <PokemonCard pokemon={item} />}
-        ListFooterComponent={loading ? <ActivityIndicator size="large" color="#4CAF50" /> : null}
-        onEndReached={handleLoadMore} // Gọi hàm khi cuộn đến cuối danh sách
-        onEndReachedThreshold={0.1} // Khoảng cách đến cuối danh sách để tải thêm
+        renderItem={({ item }) => <PokemonCard pokemon={item} />} // Gọi component hiển thị Pokémon
       />
     </View>
   );
