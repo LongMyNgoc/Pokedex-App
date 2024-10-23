@@ -12,16 +12,14 @@ const numColumns = screenWidth > 600 ? 3 : 2; // 3 cột cho màn hình lớn, 2
 const App: React.FC = () => {
   const { pokemonList, loading } = useFetchPokemon(); // Lấy danh sách Pokémon
   const [searchText, setSearchText] = useState('');
-  const [selectedVersion, setSelectedVersion] = useState<string | undefined>(undefined);
   const [selectedGen, setSelectedGen] = useState<string | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<string | undefined>(undefined);
 
   const filteredPokemon = pokemonList.filter((pokemon) => {
     const matchesSearch = pokemon.name.toLowerCase().includes(searchText.toLowerCase());
-    const matchesVersion = selectedVersion ? pokemon.version === selectedVersion : true;
     const matchesGen = selectedGen ? pokemon.generation === selectedGen : true;
     const matchesType = selectedType ? pokemon.types.includes(selectedType) : true;
-    return matchesSearch && matchesVersion && matchesGen && matchesType;
+    return matchesSearch && matchesGen && matchesType;
   });
 
   // Tính toán số lượng mục trống cần thêm
@@ -50,8 +48,6 @@ const App: React.FC = () => {
       />
 
       <Filters
-        selectedVersion={selectedVersion}
-        setSelectedVersion={setSelectedVersion}
         selectedGen={selectedGen}
         setSelectedGen={setSelectedGen}
         selectedType={selectedType}

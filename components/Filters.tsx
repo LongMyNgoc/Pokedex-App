@@ -3,8 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 interface FilterProps {
-  selectedVersion: string | undefined;
-  setSelectedVersion: (value: string | undefined) => void;
   selectedGen: string | undefined;
   setSelectedGen: (value: string | undefined) => void;
   selectedType: string | undefined;
@@ -12,8 +10,6 @@ interface FilterProps {
 }
 
 const Filters: React.FC<FilterProps> = ({
-  selectedVersion,
-  setSelectedVersion,
   selectedGen,
   setSelectedGen,
   selectedType,
@@ -21,15 +17,6 @@ const Filters: React.FC<FilterProps> = ({
 }) => {
   return (
     <View style={styles.filtersContainer}>
-      <Picker
-        selectedValue={selectedVersion}
-        style={styles.picker}
-        onValueChange={(itemValue) => setSelectedVersion(itemValue)}
-      >
-        <Picker.Item label="All Version" value="" />
-        <Picker.Item label="Red/Blue" value="red-blue" />
-      </Picker>
-
       <Picker
         selectedValue={selectedGen}
         style={styles.picker}
