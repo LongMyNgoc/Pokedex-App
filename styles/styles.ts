@@ -22,4 +22,10 @@ export const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff',
   },
+  emptyCard: {
+    flex: 1,
+    width: '100%',
+    height: 100, // Điều chỉnh chiều cao theo ý bạn
+    backgroundColor: 'transparent', // Hoặc màu sắc khác để làm nổi bật
+  },
 });
