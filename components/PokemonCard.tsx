@@ -26,92 +26,94 @@ const getTypeColor = (type: string) => {
     }
 };
 
-const PokemonCard = React.memo(({ pokemon }: { pokemon: PokemonDetails }) => (
-    <TouchableOpacity style={styles.card}>
-        <ImageBackground
-            source={require('../Pictures/Background.jpeg')} // Đường dẫn tới hình nền của bạn
-            style={styles.background}
-            imageStyle={styles.backgroundImage}
-            resizeMode="cover" // Điều chỉnh cách hiển thị ảnh nền
-        >
-            {/* Vùng chứa loại Pokémon */}  
-            <View style={styles.header}>
-                <View style={styles.typesContainer}>
-                    {pokemon.types.map((type) => (
-                        <Text key={type} style={[styles.type, { backgroundColor: getTypeColor(type) }]}>
-                            {type.toUpperCase()}
-                        </Text>
-                    ))}
-                </View>
-            </View>
-            <Image source={{ uri: pokemon.sprite }} style={styles.image} />
-            <Text style={styles.number}>{pokemon.number}</Text>
-            <Text style={styles.name}>{pokemon.name}</Text>
-            {/* Số thứ tự của Pokémon hiển thị bên dưới tên */}
-        </ImageBackground>
-    </TouchableOpacity>
+interface Props {
+  pokemon: PokemonDetails; // Kiểu dữ liệu của Pokemon
+  onPress: () => void; // Hàm sự kiện khi nhấn vào card
+}
+
+const PokemonCard: React.FC<Props> = React.memo(({ pokemon, onPress }) => (
+  <TouchableOpacity style={styles.card} onPress={onPress}>
+    <ImageBackground
+      source={require('../Pictures/Background.jpeg')}
+      style={styles.background}
+      imageStyle={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.header}>
+        <View style={styles.typesContainer}>
+          {pokemon.types.map((type) => (
+            <Text key={type} style={[styles.type, { backgroundColor: getTypeColor(type) }]}>
+              {type.toUpperCase()}
+            </Text>
+          ))}
+        </View>
+      </View>
+      <Image source={{ uri: pokemon.sprite }} style={styles.image} />
+      <Text style={styles.number}>#{pokemon.number}</Text>
+      {/* Tên Pokemon được viết hoa chữ cái đầu và in đậm */}
+      <Text style={styles.name}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+    </ImageBackground>
+  </TouchableOpacity>
 ), (prevProps, nextProps) => {
-    return prevProps.pokemon.name === nextProps.pokemon.name;
+  return prevProps.pokemon.name === nextProps.pokemon.name; // Kiểm tra nếu Pokemon không thay đổi
 });
 
 const styles = StyleSheet.create({
-    card: {
-        flex: 1,
-        alignItems: 'center',
-        margin: 5,
-        borderRadius: 10,
-        width: (Dimensions.get('window').width / 3) - 15,
-        elevation: 3,
-        position: 'relative',
-        overflow: 'hidden', // Để ẩn phần ngoài viền
-    },
-    background: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    backgroundImage: {
-        borderRadius: 10,
-    },
-    header: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'flex-start', // Căn loại Pokemon về bên trái
-        position: 'absolute',
-        top: 5,
-        left: 10,
-        right: 10,
-    },
-    typesContainer: {
-        flexDirection: 'row',
-    },
-    type: {
-        fontSize: 10,
-        color: '#fff',
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        borderRadius: 5,
-        marginRight: 5, // Khoảng cách giữa các loại
-        textAlign: 'center',
-    },
-    image: {
-        width: 150, // Kích thước ảnh Pokemon
-        height: 150, // Kích thước ảnh Pokemon
-        marginTop: 20,
-    },
-    name: {
-        marginTop: 10,
-        fontSize: 16, // Tăng kích thước tên Pokemon
-        fontWeight: 'bold',
-        textTransform: 'capitalize',
-        color: '#FFFFFF', // Đổi màu tên Pokemon thành trắng
-    },
-    number: {
-        fontSize: 14, // Giảm kích thước của số thứ tự
-        color: '#FFFFFF',
-        fontWeight: 'bold',
-        marginTop: 5, // Khoảng cách bên dưới tên Pokémon
-    },
+  card: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 5,
+    borderRadius: 10,
+    width: (Dimensions.get('window').width / 3) - 15,
+    elevation: 3,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backgroundImage: {
+    borderRadius: 10,
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    position: 'absolute',
+    top: 5,
+    left: 10,
+    right: 10,
+  },
+  typesContainer: {
+    flexDirection: 'row',
+  },
+  type: {
+    fontSize: 10,
+    color: '#fff',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 5,
+    marginRight: 5,
+    textAlign: 'center',
+  },
+  image: {
+    width: 150,
+    height: 150,
+    marginTop: 20,
+  },
+  name: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold', // In đậm tên Pokemon
+    color: 'white', // Màu chữ trắng
+  },
+  number: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'white', // Màu chữ trắng
+  },
 });
 
 export default PokemonCard;

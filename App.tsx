@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import { View, Text, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import PokemonCard from './components/PokemonCard';
 import Filters from './components/Filters';
 import useFetchPokemon from './hooks/useFetchPokemon';
 import { styles } from './styles/styles';
+import PokemonDetailsScreen from './components/PokemonDetailScreen';
+import { PokemonDetails } from './styles/types';
 
-// Lấy kích thước màn hình
-const screenWidth = Dimensions.get('window').width;
-const numColumns = screenWidth > 600 ? 3 : 2; // 3 cột cho màn hình lớn, 2 cột cho màn hình nhỏ
+const Stack = createStackNavigator();
 
-const App: React.FC = () => {
-  const { pokemonList, loading } = useFetchPokemon(); // Lấy danh sách Pokémon
-  const [searchText, setSearchText] = useState('');
+const PokedexScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const { pokemonList, loading } = useFetchPokemon(); // Fetch dữ liệu Pokemon
+  const [searchText, setSearchText] = useState(''); // Lưu trữ tìm kiếm
   const [selectedGen, setSelectedGen] = useState<string | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<string | undefined>(undefined);
 
+  // Lọc danh sách Pokemon theo tìm kiếm, thế hệ và loại
   const filteredPokemon = pokemonList.filter((pokemon) => {
     const matchesSearch = pokemon.name.toLowerCase().includes(searchText.toLowerCase());
     const matchesGen = selectedGen ? pokemon.generation === selectedGen : true;
@@ -22,11 +25,8 @@ const App: React.FC = () => {
     return matchesSearch && matchesGen && matchesType;
   });
 
-  // Tính toán số lượng mục trống cần thêm
-  const remainder = filteredPokemon.length % numColumns;
-  const emptyItems = remainder ? Array(numColumns - remainder).fill(null) : []; // Tạo các mục trống
-
-  // Kết hợp danh sách Pokémon với các mục trống
+  const remainder = filteredPokemon.length % 2;
+  const emptyItems = remainder ? Array(2 - remainder).fill(null) : [];
   const displayData = [...filteredPokemon, ...emptyItems];
 
   if (loading) {
@@ -46,24 +46,44 @@ const App: React.FC = () => {
         value={searchText}
         onChangeText={setSearchText}
       />
-
       <Filters
         selectedGen={selectedGen}
         setSelectedGen={setSelectedGen}
         selectedType={selectedType}
         setSelectedType={setSelectedType}
       />
-
       <FlatList
-        data={displayData} // Sử dụng danh sách đã kết hợp
-        key={numColumns.toString()} // Thêm key để buộc render lại FlatList khi số cột thay đổi
-        keyExtractor={(item, index) => (item ? item.name : `empty-${index}`)} // Thay đổi key cho mục trống
-        numColumns={numColumns} // Điều chỉnh số cột theo kích thước màn hình
+        data={displayData}
+        keyExtractor={(item, index) => (item ? item.name : `empty-${index}`)}
+        numColumns={2}
         extraData={searchText}
-        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 10 }} // Thêm khoảng cách giữa các cột
-        renderItem={({ item }) => item ? <PokemonCard pokemon={item} /> : <View style={styles.emptyCard} />} // Hiển thị Pokémon hoặc ô trống
+        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 10 }}
+        renderItem={({ item }) =>
+          item ? (
+            <PokemonCard
+              pokemon={item}
+              onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })} // Truyền Pokemon vào chi tiết
+            />
+          ) : (
+            <View style={styles.emptyCard} />
+          )
+        }
       />
     </View>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Pokedex" component={PokedexScreen} />
+        <Stack.Screen
+          name="PokemonDetails"
+          component={PokemonDetailsScreen as React.FC<any>} // Chỉ định kiểu React.FC<any>
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
