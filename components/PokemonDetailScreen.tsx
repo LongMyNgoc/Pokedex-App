@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { PokemonDetails } from '../styles/types';
+import { PokemonDetails, PokemonEvolution } from '../styles/types';
 import useFetchPokemonEvolution from '../hooks/fetchPokemonEvolution';
 import PokemonCard from './PokemonCard';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App'; // Đảm bảo đường dẫn đúng
+import { RootStackParamList } from '../App';
 
-type PokemonDetailsScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'PokemonDetails'
->;
+type PokemonDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PokemonDetails'>;
 
 type PokemonDetailsScreenRouteProp = RouteProp<{ PokemonDetails: { pokemon: PokemonDetails, pokemonList: PokemonDetails[] } }, 'PokemonDetails'>;
 
@@ -46,12 +43,14 @@ const getTypeColor = (type: string) => {
 const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
   const { pokemon, pokemonList } = route.params;
   const { evolutionData, loading, error } = useFetchPokemonEvolution(pokemon.name.toLowerCase());
-
-  const navigation = useNavigation<PokemonDetailsScreenNavigationProp>(); // Dùng kiểu đã khai báo
+  const navigation = useNavigation<PokemonDetailsScreenNavigationProp>();
 
   const evolutionPokemonCards = evolutionData
-    .map(evolution => pokemonList.find(p => p.number === evolution.id))
-    .filter((pokemon): pokemon is PokemonDetails => pokemon !== undefined);
+    .map(evolution => ({
+      ...evolution,
+      details: pokemonList.find(p => p.number === evolution.id)
+    }))
+    .filter((evolution): evolution is PokemonEvolution & { details: PokemonDetails } => evolution.details !== undefined);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -66,9 +65,7 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
 
           <View style={styles.typesContainer}>
             {pokemon.types.map((type) => (
-              <Text key={type} style={[styles.type, { backgroundColor: getTypeColor(type) }]}>
-                {capitalizeFirstLetter(type)}
-              </Text>
+              <Text key={type} style={[styles.type, { backgroundColor: getTypeColor(type) }]}>{capitalizeFirstLetter(type)}</Text>
             ))}
           </View>
 
@@ -77,30 +74,40 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
       </ImageBackground>
 
       <View style={styles.evolutionContainer}>
-        <Text style={styles.evolutionTitle}>Evolutions:</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : error ? (
-          <Text style={styles.errorText}>Error: {error}</Text>
-        ) : evolutionPokemonCards.length > 0 ? (
-          <View style={styles.evolutionCards}>
-            {evolutionPokemonCards.map((evolutionPokemon) => (
-              <PokemonCard 
-                key={evolutionPokemon.number} 
-                pokemon={evolutionPokemon} 
-                onPress={() => 
-                  navigation.navigate('PokemonDetails', { 
-                    pokemon: evolutionPokemon, 
-                    pokemonList 
-                  })
-                } 
-              />
-            ))}
-          </View>
-        ) : (
-          <Text style={styles.noEvolutionText}>No Evolutions</Text>
-        )}
-      </View>
+  <Text style={styles.evolutionTitle}>Evolutions</Text>
+  {loading ? (
+    <ActivityIndicator size="large" color="#0000ff" />
+  ) : error ? (
+    <Text style={styles.errorText}>Error: {error}</Text>
+  ) : evolutionPokemonCards.length > 0 ? (
+    <View style={styles.evolutionCards}>
+      {evolutionPokemonCards.map(({ details: evolutionPokemon, evolution_trigger, min_level, item }, index) => (
+        <View key={evolutionPokemon.number} style={styles.evolutionDetail}>
+          {/* Hiển thị Evolution Method nếu không phải là thẻ đầu tiên */}
+          {index !== 0 && (
+            <>
+              <Text style={styles.evolutionText}>Evolution Method: {capitalizeFirstLetter(evolution_trigger)}</Text>
+              {min_level && <Text style={styles.evolutionText}>Level: {min_level}</Text>}
+              {item && <Text style={styles.evolutionText}>Item: {item}</Text>}
+            </>
+          )}
+          <PokemonCard 
+            pokemon={evolutionPokemon} 
+            onPress={() => 
+              navigation.navigate('PokemonDetails', { 
+                pokemon: evolutionPokemon, 
+                pokemonList 
+              })
+            } 
+          />
+        </View>
+      ))}
+    </View>
+  ) : (
+    <Text style={styles.noEvolutionText}>No Evolutions</Text>
+  )}
+</View>
+
     </ScrollView>
   );
 };
@@ -108,7 +115,7 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
 const styles = StyleSheet.create({
   background: {
     width: '100%',
-    paddingVertical: 30,
+    paddingVertical: 150,
     alignItems: 'center',
   },
   scrollContent: {
@@ -153,17 +160,54 @@ const styles = StyleSheet.create({
     marginTop: 30,
     padding: 20,
     alignItems: 'center',
+    backgroundColor: '#f9f9f9',  // Thêm màu nền
+    borderRadius: 10, // Bo góc cho phần chứa
+    width: '100%',
   },
   evolutionTitle: {
-    fontSize: 20,
+    fontSize: 24, 
     fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
+    color: '#FF4500', // Màu cam sáng cho chữ
+    textAlign: 'center', // Căn giữa tiêu đề
+    marginBottom: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    
+    // Shadow đa lớp để tạo chiều sâu
+    textShadowColor: 'rgba(255, 215, 0, 0.8)', // Bóng sáng vàng đầu tiên
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+    shadowColor: '#FFD700',  // Màu vàng đậm cho bóng thêm chiều sâu
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+  
+    // Viền kép và gradient nền
+    borderWidth: 3, 
+    borderColor: '#FFD700', // Viền vàng gold
+    borderRadius: 12, 
+    borderStyle: 'solid',
+  
+    // Gradient nền (sử dụng nếu có thư viện hỗ trợ LinearGradient như 'expo-linear-gradient')
+    backgroundColor: 'rgba(255, 165, 0, 0.2)', // Màu nền cam nhẹ
+    overflow: 'hidden', // Cắt bớt viền nếu có
   },
+  
   evolutionCards: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+  },
+  evolutionDetail: {
+    marginBottom: 10,
+    alignItems: 'center',
+    marginHorizontal: 10, // Thêm khoảng cách bên trái và bên phải
+  },
+  evolutionText: {
+    fontSize: 14,
+    color: 'black',
+    fontWeight: 'bold',
+    marginHorizontal: 5,
   },
   errorText: {
     fontSize: 16,
