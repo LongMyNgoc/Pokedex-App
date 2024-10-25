@@ -62,7 +62,12 @@ const PokedexScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           item ? (
             <PokemonCard
               pokemon={item}
-              onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })} // Truyền Pokemon vào chi tiết
+              onPress={() => 
+                navigation.navigate('PokemonDetails', { 
+                  pokemon: item, 
+                  pokemonList // Truyền pokemonList vào params
+                })
+              }
             />
           ) : (
             <View style={styles.emptyCard} />
