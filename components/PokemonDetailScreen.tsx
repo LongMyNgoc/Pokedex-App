@@ -1,9 +1,16 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { PokemonDetails } from '../styles/types';
 import useFetchPokemonEvolution from '../hooks/fetchPokemonEvolution';
 import PokemonCard from './PokemonCard';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App'; // Đảm bảo đường dẫn đúng
+
+type PokemonDetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'PokemonDetails'
+>;
 
 type PokemonDetailsScreenRouteProp = RouteProp<{ PokemonDetails: { pokemon: PokemonDetails, pokemonList: PokemonDetails[] } }, 'PokemonDetails'>;
 
@@ -39,6 +46,8 @@ const getTypeColor = (type: string) => {
 const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
   const { pokemon, pokemonList } = route.params;
   const { evolutionData, loading, error } = useFetchPokemonEvolution(pokemon.name.toLowerCase());
+
+  const navigation = useNavigation<PokemonDetailsScreenNavigationProp>(); // Dùng kiểu đã khai báo
 
   const evolutionPokemonCards = evolutionData
     .map(evolution => pokemonList.find(p => p.number === evolution.id))
@@ -79,7 +88,12 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
               <PokemonCard 
                 key={evolutionPokemon.number} 
                 pokemon={evolutionPokemon} 
-                onPress={() => { /* Event handler here */ }} 
+                onPress={() => 
+                  navigation.navigate('PokemonDetails', { 
+                    pokemon: evolutionPokemon, 
+                    pokemonList 
+                  })
+                } 
               />
             ))}
           </View>

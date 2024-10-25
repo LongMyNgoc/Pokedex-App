@@ -9,7 +9,12 @@ import { styles } from './styles/styles';
 import PokemonDetailsScreen from './components/PokemonDetailScreen';
 import { PokemonDetails } from './styles/types';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  Pokedex: undefined;
+  PokemonDetails: { pokemon: PokemonDetails; pokemonList: PokemonDetails[] };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const PokedexScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { pokemonList, loading } = useFetchPokemon(); // Fetch dữ liệu Pokemon

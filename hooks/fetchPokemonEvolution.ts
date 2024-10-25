@@ -29,19 +29,17 @@ const useFetchPokemonEvolution = (pokemonName: string) => {
           const traverseChain = (evolutionChain: any) => {
             const speciesName = evolutionChain.species.name;
 
-            if (speciesName === pokemonName.toLowerCase() || evolutions.length > 0) {
-              const evolutionDetails = evolutionChain.evolution_details[0] || {};
+            const evolutionDetails = evolutionChain.evolution_details[0] || {};
 
-              evolutions.push({
-                number: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
-                id: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
-                name: speciesName,
-                evolution_trigger: evolutionDetails.trigger?.name || '',
-                min_level: evolutionDetails.min_level || null,
-                item: evolutionDetails.item ? evolutionDetails.item.name : undefined,
-                evolved_species_id: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
-              });
-            }
+            evolutions.push({
+              number: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
+              id: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
+              name: speciesName,
+              evolution_trigger: evolutionDetails.trigger?.name || '',
+              min_level: evolutionDetails.min_level || null,
+              item: evolutionDetails.item ? evolutionDetails.item.name : undefined,
+              evolved_species_id: parseInt(evolutionChain.species.url.split('/').slice(-2)[0]),
+            });
 
             if (evolutionChain.evolves_to.length > 0) {
               evolutionChain.evolves_to.forEach(traverseChain);
