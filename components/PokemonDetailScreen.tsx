@@ -8,7 +8,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 
 type PokemonDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PokemonDetails'>;
-
 type PokemonDetailsScreenRouteProp = RouteProp<{ PokemonDetails: { pokemon: PokemonDetails, pokemonList: PokemonDetails[] } }, 'PokemonDetails'>;
 
 interface Props {
@@ -74,40 +73,38 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
       </ImageBackground>
 
       <View style={styles.evolutionContainer}>
-  <Text style={styles.evolutionTitle}>Evolutions</Text>
-  {loading ? (
-    <ActivityIndicator size="large" color="#0000ff" />
-  ) : error ? (
-    <Text style={styles.errorText}>Error: {error}</Text>
-  ) : evolutionPokemonCards.length > 0 ? (
-    <View style={styles.evolutionCards}>
-      {evolutionPokemonCards.map(({ details: evolutionPokemon, evolution_trigger, min_level, item }, index) => (
-        <View key={evolutionPokemon.number} style={styles.evolutionDetail}>
-          {/* Hiển thị Evolution Method nếu không phải là thẻ đầu tiên */}
-          {index !== 0 && (
-            <>
-              <Text style={styles.evolutionText}>Evolution Method: {capitalizeFirstLetter(evolution_trigger)}</Text>
-              {min_level && <Text style={styles.evolutionText}>Level: {min_level}</Text>}
-              {item && <Text style={styles.evolutionText}>Item: {item}</Text>}
-            </>
-          )}
-          <PokemonCard 
-            pokemon={evolutionPokemon} 
-            onPress={() => 
-              navigation.navigate('PokemonDetails', { 
-                pokemon: evolutionPokemon, 
-                pokemonList 
-              })
-            } 
-          />
-        </View>
-      ))}
-    </View>
-  ) : (
-    <Text style={styles.noEvolutionText}>No Evolutions</Text>
-  )}
-</View>
-
+        <Text style={styles.evolutionTitle}>Evolutions</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : error ? (
+          <Text style={styles.errorText}>Error: {error}</Text>
+        ) : evolutionPokemonCards.length > 0 ? (
+          <View style={styles.evolutionCards}>
+            {evolutionPokemonCards.map(({ details: evolutionPokemon, evolution_trigger, min_level, item }, index) => (
+              <View key={evolutionPokemon.number} style={styles.evolutionDetail}>
+                {index !== 0 && (
+                  <>
+                    <Text style={styles.evolutionText}>Evolution Method: {capitalizeFirstLetter(evolution_trigger)}</Text>
+                    {min_level && <Text style={styles.evolutionText}>Level: {min_level}</Text>}
+                    {item && <Text style={styles.evolutionText}>Item: {item}</Text>}
+                  </>
+                )}
+                <PokemonCard 
+                  pokemon={evolutionPokemon} 
+                  onPress={() => 
+                    navigation.navigate('PokemonDetails', { 
+                      pokemon: evolutionPokemon, 
+                      pokemonList 
+                    })
+                  } 
+                />
+              </View>
+            ))}
+          </View>
+        ) : (
+          <Text style={styles.noEvolutionText}>No Evolutions</Text>
+        )}
+      </View>
     </ScrollView>
   );
 };
@@ -192,16 +189,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 165, 0, 0.2)', // Màu nền cam nhẹ
     overflow: 'hidden', // Cắt bớt viền nếu có
   },
-  
   evolutionCards: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   evolutionDetail: {
-    marginBottom: 10,
     alignItems: 'center',
-    marginHorizontal: 10, // Thêm khoảng cách bên trái và bên phải
+    marginBottom: 10,
+    width: '100%',
+  },
+  emptyCard: {
+    width: 150,
+    height: 150, // Thêm chiều cao cho các thẻ rỗng giống App.tsx
+    backgroundColor: 'transparent',
   },
   evolutionText: {
     fontSize: 14,
