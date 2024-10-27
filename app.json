@@ -18,10 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.longmyngoc.Pokedex_LMN"
     },
     "web": {
       "favicon": "./Pictures/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "44cb7af5-3f4e-459a-bfc1-6f0ac0ab81a1"
+      }
     }
   }
 }

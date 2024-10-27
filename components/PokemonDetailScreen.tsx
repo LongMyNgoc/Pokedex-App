@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageBackground, ActivityIndicator, ScrollView, Dimensions, Platform, ViewStyle } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { PokemonDetails, PokemonEvolution } from '../styles/types';
 import useFetchPokemonEvolution from '../hooks/fetchPokemonEvolution';
@@ -13,6 +13,8 @@ type PokemonDetailsScreenRouteProp = RouteProp<{ PokemonDetails: { pokemon: Poke
 interface Props {
   route: PokemonDetailsScreenRouteProp;
 }
+
+const { width, height } = Dimensions.get('window');
 
 const capitalizeFirstLetter = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -112,31 +114,31 @@ const PokemonDetailsScreen: React.FC<Props> = ({ route }) => {
 const styles = StyleSheet.create({
   background: {
     width: '100%',
-    paddingVertical: 150,
+    paddingVertical: height * 0.2,
     alignItems: 'center',
   },
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: height * 0.05,
   },
   detailContainer: {
-    padding: 20,
+    padding: width * 0.05,
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: width * 0.5,
+    height: width * 0.5,
     marginBottom: 10,
   },
   text: {
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: 'black',
     marginBottom: 5,
     fontWeight: 'bold',
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   type: {
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: 'white',
     padding: 5,
     margin: 5,
@@ -154,70 +156,60 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   evolutionContainer: {
-    marginTop: 30,
-    padding: 20,
+    marginTop: height * 0.05,
+    padding: width * 0.05,
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',  // Thêm màu nền
-    borderRadius: 10, // Bo góc cho phần chứa
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
     width: '100%',
   },
   evolutionTitle: {
-    fontSize: 24, 
+    fontSize: width * 0.06,
     fontWeight: 'bold',
-    color: '#FF4500', // Màu cam sáng cho chữ
-    textAlign: 'center', // Căn giữa tiêu đề
+    color: '#FF4500',
+    textAlign: 'center',
     marginBottom: 15,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    
-    // Shadow đa lớp để tạo chiều sâu
-    textShadowColor: 'rgba(255, 215, 0, 0.8)', // Bóng sáng vàng đầu tiên
+    textShadowColor: 'rgba(255, 215, 0, 0.8)',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,
-    shadowColor: '#FFD700',  // Màu vàng đậm cho bóng thêm chiều sâu
+    shadowColor: '#FFD700',
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.6,
     shadowRadius: 8,
-  
-    // Viền kép và gradient nền
-    borderWidth: 3, 
-    borderColor: '#FFD700', // Viền vàng gold
-    borderRadius: 12, 
-    borderStyle: 'solid',
-  
-    // Gradient nền (sử dụng nếu có thư viện hỗ trợ LinearGradient như 'expo-linear-gradient')
-    backgroundColor: 'rgba(255, 165, 0, 0.2)', // Màu nền cam nhẹ
-    overflow: 'hidden', // Cắt bớt viền nếu có
+    borderWidth: 3,
+    borderColor: '#FFD700',
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+    overflow: 'hidden',
   },
   evolutionCards: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginBottom: 10,
+    width: '100%', // Thêm để đảm bảo không bị cắt
   },
   evolutionDetail: {
     alignItems: 'center',
     marginBottom: 10,
-    width: '100%',
-  },
-  emptyCard: {
-    width: 150,
-    height: 150, // Thêm chiều cao cho các thẻ rỗng giống App.tsx
-    backgroundColor: 'transparent',
+    width: '100%', // Thay đổi kích thước
+    justifyContent: 'center', // Giữa cho các thẻ
   },
   evolutionText: {
-    fontSize: 14,
+    fontSize: width * 0.035,
     color: 'black',
     fontWeight: 'bold',
     marginHorizontal: 5,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: 'red',
     fontWeight: 'bold',
   },
   noEvolutionText: {
-    fontSize: 16,
+    fontSize: width * 0.04,
     color: 'gray',
     fontStyle: 'italic',
   },
