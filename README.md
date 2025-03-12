@@ -1,49 +1,47 @@
-# Welcome to Pokedex app 👋
+# Từ điền Pokemon (FRONT-END)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Giới thiệu
+**Từ điển Pokemon** là ứng dụng di động tìm kiếm Pokemon từ Gen 1 đến Gen 9 gồm 1025 Pokemon
 
-## Get started
+## Tính năng chính
+- **Tìm kiếm Pokemon**: Cho phép tìm kiếm Pokemon theo tên.
+- **Lọc Pokemon**: Lọc danh sách Pokemon theo hệ (Type) và theo Gen (Thế hệ).
+- **Xem thông tin Pokemon**: Hiển thị thông tin chi tiết về từng Pokemon như tên, loại, chỉ số, và khả năng.
 
-1. Install dependencies
+## Công nghệ sử dụng
+- **Expo**: Framework cho phát triển ứng dụng di động với React Native.
+- **Vercel**: Triển khai Back-End và chạy hệ thống trên môi trường production.
+- **React Native**: Framework chính cho việc phát triển ứng dụng di động.
+- **Axios**: Được sử dụng để gửi và nhận dữ liệu từ API.
 
-   ```bash
-   npm install
-   ```
-2. Start the app
+## Yêu cầu hệ thống
+- **Node.js** phiên bản **20.17.0** (Cần cài đặt trước khi chạy dự án)
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+## Cài đặt và chạy dự án
+### 1. Cài đặt dependencies
+Chạy lệnh sau để cài đặt các thư viện cần thiết:
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Khởi động server phát triển
+Chạy lệnh sau để khởi động dự án:
+```bash
+npx expo start
+```
 
-## Learn more
+## Liên kết hệ thống
+- **Back-End (GitHub)**: https://github.com/LongMyNgoc/Pokedex_BE.git
+- **Front-End (GitHub)**: https://github.com/LongMyNgoc/Pokedex-React-Native-Expo.git
+- **Back-End (Vercel)**: https://pokedex-be.vercel.app/
 
-To learn more about developing your project with Expo, look at the following resources:
+## Link
+- **Link APK**:https://studenthcmupedu-my.sharepoint.com/:f:/g/personal/4801104082_student_hcmue_edu_vn/Et0vHxmqyqJJpDcpijk-3noBjN-p_YEgJGrBKdnRXMbSFA?e=fdH2J2
+- **Link Video chạy chương trình**: https://www.youtube.com/watch?v=sAXsprtoT9U
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Đóng góp & Phát triển
+Mọi ý kiến đóng góp hoặc báo lỗi có thể được gửi qua hệ thống quản lý mã nguồn của dự án hoặc liên hệ với nhóm phát triển. Chúng tôi hoan nghênh mọi sự đóng góp để cải thiện hệ thống!
 
-## Join the community
+## Thông tin liên hệ
+📧 Email: longmyngoc2004@gmail.com  
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
