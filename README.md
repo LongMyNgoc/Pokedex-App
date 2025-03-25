@@ -1,5 +1,7 @@
 # Từ điền Pokemon (FRONT-END)
 <img src="assets/HomeScreen.png" alt="Home Screen" width="300">
+<img src="assets/DetailScreen.png" alt="Detail Screen" width="300">
+<img src="assets/EvolutionScreen.png" alt="Evolution Screen" width="300">
 
 ## Giới thiệu
 **Từ điển Pokemon** là ứng dụng di động tìm kiếm Pokemon từ Gen 1 đến Gen 9 gồm 1025 Pokemon
