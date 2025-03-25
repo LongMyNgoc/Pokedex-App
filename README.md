@@ -1,4 +1,5 @@
 # Từ điền Pokemon (FRONT-END)
+![HomeScreen](assets/Home Screen.png)
 
 ## Giới thiệu
 **Từ điển Pokemon** là ứng dụng di động tìm kiếm Pokemon từ Gen 1 đến Gen 9 gồm 1025 Pokemon
