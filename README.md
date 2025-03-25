@@ -1,8 +1,8 @@
 # Từ điền Pokemon (FRONT-END)
 <p align="center">
-  <img src="assets/HomeScreen.png" alt="Home Screen" width="300" style="display: inline-block;">
-  <img src="assets/DetailScreen.png" alt="Detail Screen" width="300" style="display: inline-block;">
-  <img src="assets/EvolutionScreen.png" alt="Evolution Screen" width="300" style="display: inline-block;">
+  <img src="assets/HomeScreen.png" alt="Home Screen" width="200" style="display: inline-block;">
+  <img src="assets/DetailScreen.png" alt="Detail Screen" width="200" style="display: inline-block;">
+  <img src="assets/EvolutionScreen.png" alt="Evolution Screen" width="200" style="display: inline-block;">
 </p>
 
 ## Giới thiệu
